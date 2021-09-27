@@ -1,5 +1,5 @@
 class Department {
-  private employees: string[] = [];
+  protected employees: string[] = [];
 
   constructor(private readonly id: string, public name: string) {}
 
@@ -7,12 +7,12 @@ class Department {
     console.log(`Department -- ${this.name} -- of ${this.id}`);
   }
 
-  addEmployee(this: Department, employee: string) {
+  addEmployee(employee: string) {
     this.employees.push(employee);
   }
 
-  printEmployeeInformation(this: Department) {
-    console.log(`\t${this.employees.length} employess → ${this.employees}`);
+  printEmployeeInformation() {
+    console.log(`\tEmployees: ${this.employees.length} → ${this.employees}`);
   }
 }
 
@@ -26,16 +26,32 @@ class ITDepartment extends Department {
 }
 
 class AccountingDepartment extends Department {
+  private lastReport: string;
   constructor(id: string, private reports: string[] = []) {
     super(id, 'Accounting');
+    this.lastReport = reports[0];
+  }
+
+  addEmployee(name: string) {
+    if (name !== 'max') {
+      this.employees.push(name);
+    }
   }
 
   addReport(text: string) {
     this.reports.push(text);
+    this.lastReport = text;
   }
 
-  printReports(this: AccountingDepartment) {
-    console.table(this.reports);
+  get mostRecentReport() {
+    if (this.lastReport) {
+      return this.lastReport;
+    }
+    throw new Error('No report found');
+  }
+
+  printReports() {
+    console.log(this.reports);
   }
 }
 
@@ -52,4 +68,12 @@ it.describe();
 const acc = new AccountingDepartment('ac66', ['shit happens']);
 acc.describe();
 acc.addReport('something went wrong...');
+acc.addReport('idemo online!');
 acc.printReports();
+
+acc.addEmployee('manu');
+acc.addEmployee('robi');
+acc.addEmployee('max');
+acc.printEmployeeInformation();
+
+console.log(acc.mostRecentReport);
