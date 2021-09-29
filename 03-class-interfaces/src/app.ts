@@ -1,10 +1,20 @@
 class Department {
+  public static fiscalYear = 2021;
   protected employees: string[] = [];
 
-  constructor(private readonly id: string, public name: string) {}
+  constructor(private readonly id: string, public name: string) {
+    console.log(`Created dept in ${Department.fiscalYear}!`);
+  }
+
+  static createEmployee(name: string) {
+    return { name };
+  }
 
   describe(this: Department) {
-    console.log(`Department -- ${this.name} -- of ${this.id}`);
+    console.log(
+      `%cDepartment -- ${this.name} -- of ${this.id}`,
+      'color:orange'
+    );
   }
 
   addEmployee(employee: string) {
@@ -12,7 +22,10 @@ class Department {
   }
 
   printEmployeeInformation() {
-    console.log(`\tEmployees: ${this.employees.length} → ${this.employees}`);
+    console.log(
+      `%c\tEmployees: ${this.employees.length} → ${this.employees}`,
+      'color:violet'
+    );
   }
 }
 
@@ -61,7 +74,7 @@ class AccountingDepartment extends Department {
 }
 
 /**
- * Department class
+ ** Department class
  */
 const accounting = new Department('kf83', 'Accounting #old');
 accounting.describe();
@@ -70,15 +83,20 @@ accounting.addEmployee('matija');
 accounting.addEmployee('matrian rabić');
 accounting.printEmployeeInformation();
 
+// Static properties
+const employee1 = Department.createEmployee('Billy');
+console.log('Static employee:', employee1);
+console.log('Fiscal year:', Department.fiscalYear);
+
 /**
- * IT Department
+ ** IT Department
  */
 const it = new ITDepartment('zu42', ['max', 'visnja']);
 it.describe();
 console.log(it.admins);
 
 /**
- * Accounting Department
+ ** Accounting Department
  */
 const acc = new AccountingDepartment('ac66', ['shit happens']);
 acc.describe();
