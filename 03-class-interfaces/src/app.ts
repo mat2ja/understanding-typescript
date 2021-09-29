@@ -12,7 +12,8 @@ add = (n1: number, n2: number) => {
 type greetType = (phrase: string) => void;
 
 interface Named {
-  readonly name: string;
+  readonly name?: string;
+  outputName?: string;
 }
 
 interface Greetable extends Named {
@@ -25,18 +26,24 @@ interface Add {
 }
 
 class Person implements Greetable {
-  name: string;
+  name?: string;
 
-  constructor(name: string) {
-    this.name = name;
+  constructor(name?: string) {
+    if (name) {
+      this.name = name;
+    }
   }
 
   greet(phrase: string): void {
-    console.log(`%c${phrase} ${this.name}`, 'color:coral');
+    if (this.name) {
+      console.log(`%c${phrase} ${this.name}`, 'color:coral');
+    } else {
+      console.log('You dont have a name');
+    }
   }
 }
 
 let user1: Greetable;
 
-user1 = new Person('matija');
+user1 = new Person();
 user1.greet('dobar dan...');
