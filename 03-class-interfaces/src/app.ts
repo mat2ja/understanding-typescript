@@ -1,6 +1,7 @@
 abstract class Department {
   public static fiscalYear = 2021;
   protected employees: string[] = [];
+  abstract isCool: boolean;
 
   constructor(protected readonly id: string, public name: string) {
     // console.log(`Created dept in ${Department.fiscalYear}!`);
@@ -25,6 +26,7 @@ abstract class Department {
 }
 
 class ITDepartment extends Department {
+  public isCool = true;
   constructor(id: string, public admins: string[] = []) {
     super(id, 'ITDept');
   }
@@ -35,6 +37,7 @@ class ITDepartment extends Department {
 }
 
 class AccountingDepartment extends Department {
+  public isCool = false;
   private lastReport: string;
 
   constructor(id: string, private reports: string[] = []) {
