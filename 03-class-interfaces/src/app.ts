@@ -21,29 +21,22 @@ interface Greetable extends Named {
   // greet(phrase: string): void;
 }
 
-interface Add {
-  add: AddFn;
-}
-
 class Person implements Greetable {
-  name?: string;
-
-  constructor(name?: string) {
-    if (name) {
-      this.name = name;
-    }
-  }
+  constructor(public name?: string) {}
 
   greet(phrase: string): void {
-    if (this.name) {
-      console.log(`%c${phrase} ${this.name}`, 'color:coral');
-    } else {
-      console.log('You dont have a name');
-    }
+    console.log(
+      this.name
+        ? `%c${phrase} ${this.name}`
+        : `%c${phrase}...you dont have a name`,
+      this.name ? 'color:lime' : 'color:red'
+    );
   }
 }
 
 let user1: Greetable;
-
 user1 = new Person();
 user1.greet('dobar dan...');
+
+const user2 = new Person('saul');
+user2.greet('ćao...');
