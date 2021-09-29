@@ -1,3 +1,14 @@
+// type AddFn = (a: number, b: number) => number;
+interface AddFn {
+  (a: number, b: number): number;
+}
+
+let add: AddFn;
+
+add = (n1: number, n2: number) => {
+  return n1 + n2;
+};
+
 type greetType = (phrase: string) => void;
 
 interface Named {
@@ -7,6 +18,10 @@ interface Named {
 interface Greetable extends Named {
   greet: greetType;
   // greet(phrase: string): void;
+}
+
+interface Add {
+  add: AddFn;
 }
 
 class Person implements Greetable {
