@@ -17,11 +17,8 @@ class Department {
 }
 
 class ITDepartment extends Department {
-  admins: string[];
-
-  constructor(id: string, admins: string[] = []) {
+  constructor(id: string, public admins: string[] = []) {
     super(id, 'ITDept');
-    this.admins = admins;
   }
 }
 
@@ -63,6 +60,9 @@ class AccountingDepartment extends Department {
   }
 }
 
+/**
+ * Department class
+ */
 const accounting = new Department('kf83', 'Accounting #old');
 accounting.describe();
 
@@ -70,18 +70,27 @@ accounting.addEmployee('matija');
 accounting.addEmployee('matrian rabić');
 accounting.printEmployeeInformation();
 
-const it = new ITDepartment('zu42', ['max']);
+/**
+ * IT Department
+ */
+const it = new ITDepartment('zu42', ['max', 'visnja']);
 it.describe();
+console.log(it.admins);
 
+/**
+ * Accounting Department
+ */
 const acc = new AccountingDepartment('ac66', ['shit happens']);
 acc.describe();
+
+// Adding reports
 acc.addReport('something went wrong...');
 acc.addReport('idemo online!');
-console.log('Most recent report:', acc.mostRecentReport);
 acc.mostRecentReport = 'street workout has gone well';
 console.log('Most recent report:', acc.mostRecentReport);
 acc.printReports();
 
+// Adding emploeyees
 acc.addEmployee('manu');
 acc.addEmployee('robi');
 acc.addEmployee('max');
