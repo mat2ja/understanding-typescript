@@ -31,7 +31,7 @@ class ITDepartment extends Department {
     super(id, 'ITDept');
   }
 
-  describe() {
+  describe(this: ITDepartment) {
     console.log(`%c🤡 BOOOOIS FROM IT (${this.id})`, 'color:magenta');
   }
 }
@@ -39,13 +39,21 @@ class ITDepartment extends Department {
 class AccountingDepartment extends Department {
   public isCool = false;
   private lastReport: string;
+  private static instance: AccountingDepartment;
 
-  constructor(id: string, private reports: string[] = []) {
+  private constructor(id: string, private reports: string[] = []) {
     super(id, 'Accounting');
     this.lastReport = reports[0];
   }
 
-  describe() {
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new AccountingDepartment('ac66', []);
+    }
+    return this.instance;
+  }
+
+  describe(this: AccountingDepartment) {
     console.log(`%c🤑 ACCOUNTING GANG GANG (${this.id})`, 'color:yellow');
   }
 
@@ -97,8 +105,11 @@ console.log('Admins:', it.admins);
 /**
  ** Accounting Department
  */
-const acc = new AccountingDepartment('ac66', ['shit happens']);
+// const acc = new AccountingDepartment('ac66', []);
+const acc = AccountingDepartment.getInstance();
+const acc2 = AccountingDepartment.getInstance();
 acc.describe();
+console.log('They the same instance.', acc === acc2);
 
 // Adding reports
 acc.addReport('something went wrong...');
