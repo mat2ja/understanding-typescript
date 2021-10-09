@@ -8,17 +8,34 @@ interface Employee {
 }
 
 // interface ElevatedEmployee extends Admin, Employee {}
-type ElevatedEmployee = Admin & Employee;
+type ElevatedEmployee = Employee & Admin;
 
 const e1: ElevatedEmployee = {
   name: 'hehe',
   startDate: new Date('2020-12-23'),
   priviliges: ['money', 'sex', 'drugs'],
 };
-console.log(e1);
 
 type Combinable = string | number;
 type Numeric = number | boolean;
 type Universal = Combinable & Numeric; // type is number as thats the only intersection
 
-const u: Universal = 21;
+function add(a: Combinable, b: Combinable) {
+  if (typeof a === 'string' || typeof b === 'string') {
+    return a.toString() + b.toString();
+  } else {
+    return a + b;
+  }
+}
+
+type UnknownEmployee = Employee | Admin;
+function printEmployeeInformatio(emp: UnknownEmployee) {
+  console.log('Name:', emp.name);
+  if ('priviliges' in emp) {
+    console.log('Privilegies:', emp.priviliges);
+  } else {
+    console.log('Start date', emp.startDate);
+  }
+}
+
+printEmployeeInformatio(e1);
