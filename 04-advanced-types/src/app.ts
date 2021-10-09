@@ -72,5 +72,38 @@ function useVehicle(vehicle: Vehicle) {
   }
 }
 
-useVehicle(v1);
-useVehicle(v2);
+// useVehicle(v1);
+// useVehicle(v2);
+
+// Discriminated union - we have a common property that could be used to check
+interface Bird {
+  type: 'bird';
+  flyingSpeed: number;
+}
+
+interface Horse {
+  type: 'horse';
+  runningSpeed: number;
+}
+
+type Animal = Bird | Horse;
+
+function moveAnimal(animal: Animal) {
+  let speed;
+  switch (animal.type) {
+    case 'bird':
+      speed = animal.flyingSpeed;
+      break;
+    case 'horse':
+      speed = animal.runningSpeed;
+  }
+  console.log('Moving at speed of', speed);
+}
+moveAnimal({
+  type: 'bird',
+  flyingSpeed: 23,
+});
+moveAnimal({
+  type: 'horse',
+  runningSpeed: 45,
+});
