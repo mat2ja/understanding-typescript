@@ -162,4 +162,9 @@ const user2 = {
   name: 'Malvin',
 };
 
-[user1, user2].forEach((user) => console.log(user?.job?.title));
+// Optional chaining
+// [user1, user2].forEach((user) => console.log(user?.job?.title));
+
+// Nullish coalescing
+const userInput = null;
+const storedData = userInput ?? 'DEFAULT';
