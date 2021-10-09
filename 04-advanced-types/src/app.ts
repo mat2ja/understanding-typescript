@@ -125,3 +125,19 @@ const errorBag: ErrorContainer = {
   email: 'not a valid email',
   username: 'name must be longer than 3 characters',
 };
+
+//* Function overloads
+// function add2(n:number): number;
+function add2(a: string, b: string): string;
+function add2(a: number, b: number): number;
+function add2(a: Combinable, b: Combinable) {
+  if (typeof a === 'string' || typeof b === 'string') {
+    return a.toString() + b.toString();
+  } else {
+    return a + b;
+  }
+}
+
+// const result = add2('2', '1') as string;
+const result = add2('2', '1');
+result.split(' ');
