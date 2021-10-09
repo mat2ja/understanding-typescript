@@ -38,4 +38,39 @@ function printEmployeeInformatio(emp: UnknownEmployee) {
   }
 }
 
-printEmployeeInformatio(e1);
+class Car {
+  drive() {
+    console.log('Driving...');
+  }
+  mph() {
+    console.log('Drivin real fast...');
+  }
+}
+
+class Truck {
+  drive() {
+    console.log('Driving a truck..');
+  }
+
+  loadCargo(amount: number) {
+    console.log('Loading cargo...', amount);
+  }
+}
+
+type Vehicle = Car | Truck;
+
+const v1 = new Car();
+const v2 = new Truck();
+
+function useVehicle(vehicle: Vehicle) {
+  console.log('%c##### VEHICLE ####', 'color:gold');
+  vehicle.drive();
+  if (vehicle instanceof Truck) {
+    vehicle.loadCargo(23);
+  } else {
+    vehicle.mph();
+  }
+}
+
+useVehicle(v1);
+useVehicle(v2);
