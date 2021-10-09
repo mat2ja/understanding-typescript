@@ -128,8 +128,10 @@ const errorBag: ErrorContainer = {
 
 //* Function overloads
 // function add2(n:number): number;
-function add2(a: string, b: string): string;
 function add2(a: number, b: number): number;
+function add2(a: string, b: string): string;
+function add2(a: string, b: number): string;
+function add2(a: number, b: string): string;
 function add2(a: Combinable, b: Combinable) {
   if (typeof a === 'string' || typeof b === 'string') {
     return a.toString() + b.toString();
@@ -139,5 +141,25 @@ function add2(a: Combinable, b: Combinable) {
 }
 
 // const result = add2('2', '1') as string;
-const result = add2('2', '1');
-result.split(' ');
+const result = add2('marko', 'kupio shitcoin');
+// console.log(result.split(' '));
+
+const result2 = add2('hehehe', 3);
+// console.log(result2);
+
+const result3 = add2(432, -12);
+// console.log(result3);
+
+//* Optional chaining
+const user1 = {
+  id: 'u1',
+  name: 'Max',
+  job: { title: 'CEO', desc: 'his own company' },
+};
+
+const user2 = {
+  id: 'u2',
+  name: 'Malvin',
+};
+
+[user1, user2].forEach((user) => console.log(user?.job?.title));
