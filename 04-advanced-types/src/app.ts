@@ -16,3 +16,9 @@ const e1: ElevatedEmployee = {
   priviliges: ['money', 'sex', 'drugs'],
 };
 console.log(e1);
+
+type Combinable = string | number;
+type Numeric = number | boolean;
+type Universal = Combinable & Numeric; // type is number as thats the only intersection
+
+const u: Universal = 21;
