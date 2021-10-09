@@ -102,13 +102,12 @@ function moveAnimal(animal: Animal) {
 // moveAnimal({ type: 'bird', flyingSpeed: 23 });
 // moveAnimal({ type: 'horse', runningSpeed: 45 });
 
-const userInputElement2 = document.querySelector('input')!; // typescript knows its an input
-// const userInputElement = <HTMLInputElement>(
-//   document.getElementById('user-input')
-// );
+// const userInputElement2 = document.querySelector('input')!; // typescript knows its an input
+// const userInputElement = <HTMLInputElement>(document.getElementById('user-input'));
 const userInputElement = document.getElementById(
   'user-input'
-) as HTMLInputElement; // ts doesn't know cos its fetched by id, so we cast it to input element
+) as HTMLInputElement | null; // ts doesn't know cos its fetched by id, so we cast it to input element
 
-userInputElement.value = 'Hi there';
-userInputElement2.value = 'Hi without type casting';
+if (userInputElement) {
+  userInputElement.value = 'Hi there';
+}
