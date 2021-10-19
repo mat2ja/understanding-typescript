@@ -12,18 +12,13 @@
 //   data.split(' ');
 // });
 
-function merge<T, U>(objA: T, objB: U) {
+function merge<T extends object, U extends object>(objA: T, objB: U) {
   return Object.assign(objA, objB);
 }
 
-// const mergedObj = merge({ name: 'tomo' }, { age: 20 }) as {
-//   name: string;
-//   coder: boolean;
-// };
-
-//? Generics translate to this
-const mergedObj = merge<{ name: string; languages: string[] }, { age: number }>(
-  { name: 'tomo', languages: ['flutter', 'golang'] },
-  { age: 20 }
+const mergedObj = merge(
+  { name: 'tomo', languages: ['flutter', 'golang'], hasBtc: false },
+  69
 );
-console.log(mergedObj.age);
+
+console.log(mergedObj.name);
