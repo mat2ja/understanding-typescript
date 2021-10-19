@@ -20,5 +20,10 @@ function merge<T, U>(objA: T, objB: U) {
 //   name: string;
 //   coder: boolean;
 // };
-const mergedObj = merge({ name: 'tomo' }, { age: 20 });
+
+//? Generics translate to this
+const mergedObj = merge<{ name: string; languages: string[] }, { age: number }>(
+  { name: 'tomo', languages: ['flutter', 'golang'] },
+  { age: 20 }
+);
 console.log(mergedObj.age);
