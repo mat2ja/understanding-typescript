@@ -36,7 +36,17 @@ function countAndPrint<T extends Lengthy>(element: T): [T, string] {
   return [element, description];
 }
 
-console.log(countAndPrint('hi there boomguzzler'));
-console.log(countAndPrint(['vue', 'svelte']));
-console.log(countAndPrint('r'));
-console.log(countAndPrint({ length: 69 }));
+// console.log(countAndPrint('hi there boomguzzler'));
+// console.log(countAndPrint(['vue', 'svelte']));
+// console.log(countAndPrint('r'));
+// console.log(countAndPrint({ length: 69 }));
+
+function extractAndConvert<T extends object, U extends keyof T>(
+  obj: T,
+  key: U
+) {
+  return `Value: ${obj[key]}`;
+}
+
+extractAndConvert({ name: 'matija' }, 'name');
+
