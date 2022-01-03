@@ -121,6 +121,7 @@ interface ErrorContainer {
   [prop: string]: string;
 }
 
+// const errorBag: Record<string, string> = {
 const errorBag: ErrorContainer = {
   email: 'not a valid email',
   username: 'name must be longer than 3 characters',

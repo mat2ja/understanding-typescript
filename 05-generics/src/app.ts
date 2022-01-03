@@ -38,4 +38,5 @@ function countAndPrint<T extends Lengthy>(element: T): [T, string] {
 
 console.log(countAndPrint('hi there boomguzzler'));
 console.log(countAndPrint(['vue', 'svelte']));
-console.log(countAndPrint([]));
+console.log(countAndPrint('r'));
+console.log(countAndPrint({ length: 69 }));
