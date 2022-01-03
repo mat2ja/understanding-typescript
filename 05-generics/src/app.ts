@@ -96,3 +96,27 @@ numberStorage.addItem(6);
 // objStorage.addItem(mateoObj);
 // objStorage.removeItem(patrikObj);
 // console.log(objStorage.getItems());
+
+interface CourseGoal {
+  title: string;
+  description: string;
+  completeUntil: Date;
+}
+
+//? Utility Types
+function createCourseGoal(
+  title: string,
+  description: string,
+  completeUntil: Date
+): CourseGoal {
+  let courseGoal: Partial<CourseGoal> = {};
+  courseGoal.title = title;
+  courseGoal.description = description;
+  courseGoal.completeUntil = completeUntil;
+  // all made up
+  return courseGoal as CourseGoal;
+}
+
+const coins: Readonly<string[]> = ['nano', 'cardano', 'polkadot'];
+// coins.push('tezos');
+// coins.pop()
