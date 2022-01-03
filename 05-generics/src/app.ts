@@ -48,5 +48,49 @@ function extractAndConvert<T extends object, U extends keyof T>(
   return `Value: ${obj[key]}`;
 }
 
-extractAndConvert({ name: 'matija' }, 'name');
+// console.log(extractAndConvert({ name: 'matija' }, 'name'));
 
+class DataStorage<T> {
+  constructor(private data: T[] = []) {}
+
+  addItem(item: T) {
+    this.data.push(item);
+  }
+
+  removeItem(item: T) {
+    const idx = this.data.indexOf(item);
+    if (idx === -1) {
+      return;
+    }
+    this.data.splice(idx, 1);
+  }
+
+  getItems() {
+    return [...this.data];
+  }
+}
+
+const textStorage = new DataStorage<string>(['rust']);
+
+textStorage.addItem('kotlin');
+textStorage.removeItem('kotlin');
+console.log(textStorage.getItems());
+
+const numberStorage = new DataStorage<number>();
+numberStorage.addItem(2);
+numberStorage.addItem(6);
+
+// const objStorage = new DataStorage<object>();
+// objStorage.addItem({ name: 'patrik' });
+// objStorage.addItem({ name: 'mateo' });
+// objStorage.removeItem({ name: 'patrik' });
+// console.log(objStorage.getItems());
+
+const objStorage = new DataStorage<object>();
+// by reference
+const patrikObj = { name: 'patrik' };
+const mateoObj = { name: 'mateo' };
+objStorage.addItem(patrikObj);
+objStorage.addItem(mateoObj);
+objStorage.removeItem(patrikObj);
+console.log(objStorage.getItems());
