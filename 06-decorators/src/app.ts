@@ -6,10 +6,12 @@ function Logger(logString: string) {
 }
 
 function WithTemplate(template: string, hookId: string) {
-  return (_: Function) => {
+  return (constructor: any) => {
     const hookEl = document.getElementById(hookId);
+    const p = new constructor();
     if (hookEl) {
       hookEl.innerHTML = template;
+      hookEl.querySelector('h1')!.textContent = p.name;
     }
   };
 }
@@ -17,7 +19,7 @@ function WithTemplate(template: string, hookId: string) {
 // @Logger(' LOGGING - PERSON')
 @WithTemplate('<h1>Matija was here</h1>', 'app')
 class Person {
-  name = 'Max';
+  name = 'Satoshi';
 
   constructor() {
     console.log('Creating person object....');
