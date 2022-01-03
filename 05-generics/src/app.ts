@@ -50,7 +50,9 @@ function extractAndConvert<T extends object, U extends keyof T>(
 
 // console.log(extractAndConvert({ name: 'matija' }, 'name'));
 
-class DataStorage<T> {
+type primitives = string | number | boolean;
+
+class DataStorage<T extends primitives> {
   constructor(private data: T[] = []) {}
 
   addItem(item: T) {
@@ -86,11 +88,11 @@ numberStorage.addItem(6);
 // objStorage.removeItem({ name: 'patrik' });
 // console.log(objStorage.getItems());
 
-const objStorage = new DataStorage<object>();
-// by reference
-const patrikObj = { name: 'patrik' };
-const mateoObj = { name: 'mateo' };
-objStorage.addItem(patrikObj);
-objStorage.addItem(mateoObj);
-objStorage.removeItem(patrikObj);
-console.log(objStorage.getItems());
+// const objStorage = new DataStorage<object>();
+// // by reference
+// const patrikObj = { name: 'patrik' };
+// const mateoObj = { name: 'mateo' };
+// objStorage.addItem(patrikObj);
+// objStorage.addItem(mateoObj);
+// objStorage.removeItem(patrikObj);
+// console.log(objStorage.getItems());
