@@ -154,9 +154,23 @@ function Required(target: any, propName: string) {
 
   registeredValidators[className] = {
     ...registeredValidators[className],
-    [propName]: ['required'],
+    [propName]: [
+      ...(registeredValidators[className]?.[propName] ?? []),
+      'required',
+    ],
   };
   // { Course: { title: ['required'] }}
+}
+function MinLength(target: any, propName: string) {
+  const className = target.constructor.name;
+
+  registeredValidators[className] = {
+    ...registeredValidators[className],
+    [propName]: [
+      ...(registeredValidators[className]?.[propName] ?? []),
+      'minLength',
+    ],
+  };
 }
 
 function PositiveNumber(target: any, propName: string) {
@@ -164,9 +178,10 @@ function PositiveNumber(target: any, propName: string) {
 
   registeredValidators[className] = {
     ...registeredValidators[className],
-    [propName]: Array.isArray(registeredValidators[className][propName])
-      ? [...registeredValidators[className][propName], 'positive']
-      : ['positive'],
+    [propName]: [
+      ...(registeredValidators[className]?.[propName] ?? []),
+      'positive',
+    ],
   };
   // { Course: { price: ['positive'] }}
 }
@@ -176,11 +191,11 @@ function TooLargeNumber(target: any, propName: string) {
 
   registeredValidators[className] = {
     ...registeredValidators[className],
-    [propName]: Array.isArray(registeredValidators[className][propName])
-      ? [...registeredValidators[className][propName], 'tooLarge']
-      : ['tooLarge'],
+    [propName]: [
+      ...(registeredValidators[className]?.[propName] ?? []),
+      'tooLarge',
+    ],
   };
-  // { Course: { price: ['positive'] }}
 }
 
 function validate(obj: any) {
@@ -197,6 +212,9 @@ function validate(obj: any) {
         case 'required':
           isValid = isValid && !!obj[prop];
           break;
+        case 'minLength':
+          isValid = isValid && obj?.length > 5;
+          break;
         case 'positive':
           isValid = isValid && obj[prop] > 0;
           break;
@@ -211,6 +229,7 @@ function validate(obj: any) {
 }
 
 class Course {
+  @MinLength
   @Required
   title: string;
   @TooLargeNumber
