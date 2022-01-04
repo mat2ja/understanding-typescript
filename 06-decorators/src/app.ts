@@ -35,9 +35,8 @@ class Person {
 }
 
 const pers = new Person();
-// console.log(pers);
 
-// --
+// ---------------------------------------------------
 
 const Log = (target: any, propertyName: string) => {
   console.log('%cProperty decorator', 'color:lightgreen');
@@ -104,4 +103,36 @@ class Product {
   }
 }
 
-const p = new Product('ledger nano x', 140);
+const p1 = new Product('ledger nano x', 140);
+const p2 = new Product('ledger nano s +', 90);
+
+function Autobind(
+  _target: any,
+  _methodName: string,
+  descriptor: PropertyDescriptor
+) {
+  const originalMethod = descriptor.value;
+  const adjDescriptor: PropertyDescriptor = {
+    configurable: true,
+    enumerable: false,
+    get() {
+      const boundFn = originalMethod.bind(this);
+      return boundFn;
+    },
+  };
+  return adjDescriptor;
+}
+class Printer {
+  message = 'Hey I am working and decorators are not that good';
+
+  @Autobind
+  showMessage() {
+    console.log(this.message);
+  }
+}
+
+const printer = new Printer();
+
+const button = document.querySelector('button')!;
+// button.addEventListener('click', printer.showMessage.bind(printer));
+button.addEventListener('click', printer.showMessage);
