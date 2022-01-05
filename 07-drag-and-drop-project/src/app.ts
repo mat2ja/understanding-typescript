@@ -1,3 +1,4 @@
+// Autobind decorator
 function Autobind(
   _target: any,
   _methodName: string,
@@ -12,6 +13,43 @@ function Autobind(
     },
   };
   return adjustedDescriptor;
+}
+// Validation
+interface Validatable {
+  value: string | number;
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  min?: number;
+  max?: number;
+}
+
+function validate(validatableInput: Validatable): boolean {
+  let isValid = true;
+  const { value, required, minLength, maxLength, min, max } = validatableInput;
+
+  if (required) {
+    isValid = isValid && value.toString().trim().length !== 0;
+  }
+
+  if (typeof value === 'string') {
+    if (minLength != null) {
+      isValid = isValid && value.length >= minLength;
+    }
+    if (maxLength != null) {
+      isValid = isValid && value.length <= maxLength;
+    }
+  }
+
+  if (typeof value === 'number') {
+    if (min != null) {
+      isValid = isValid && value >= min;
+    }
+    if (max != null) {
+      isValid = isValid && value <= max;
+    }
+  }
+  return isValid;
 }
 
 class ProjectInput {
@@ -72,13 +110,31 @@ class ProjectInput {
   private gatherUserInput(): [string, string, number] | void {
     const enteredTitle = this.titleInputElement.value.trim();
     const enteredDescription = this.descriptionInputElement.value.trim();
-    const enteredPeople = this.peopleInputElement.value.trim();
+    const enteredPeople = +this.peopleInputElement.value.trim();
 
-    if (
-      [enteredTitle, enteredDescription, enteredPeople].some(
-        (v) => v.length === 0
-      )
-    ) {
+    const titleValidatable: Validatable = {
+      value: enteredTitle,
+      required: true,
+    };
+    const descriptionValidatable: Validatable = {
+      value: enteredDescription,
+      required: true,
+      minLength: 5,
+    };
+    const peopleValidatable: Validatable = {
+      value: enteredPeople,
+      required: true,
+      min: 1,
+      max: 10,
+    };
+
+    const formIsValid = [
+      titleValidatable,
+      descriptionValidatable,
+      peopleValidatable,
+    ].every(validate);
+
+    if (!formIsValid) {
       return alert('Invalid input, please try again!');
     }
     return [enteredTitle, enteredDescription, +enteredPeople];
