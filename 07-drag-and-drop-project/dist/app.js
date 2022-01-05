@@ -5,6 +5,45 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var ProjectStatus;
+(function (ProjectStatus) {
+    ProjectStatus[ProjectStatus["Active"] = 0] = "Active";
+    ProjectStatus[ProjectStatus["Finished"] = 1] = "Finished";
+})(ProjectStatus || (ProjectStatus = {}));
+class Project {
+    constructor(title, description, people, status) {
+        this.title = title;
+        this.description = description;
+        this.people = people;
+        this.status = status;
+        this.id = Date.now().toString();
+    }
+}
+class ProjectState {
+    constructor() {
+        this.listeners = [];
+        this.projects = [];
+    }
+    static get instance() {
+        if (!this._instance) {
+            this._instance = new ProjectState();
+        }
+        return this._instance;
+    }
+    addListener(listenerFn) {
+        this.listeners.push(listenerFn);
+    }
+    addProject(title, description, people) {
+        const newProject = new Project(title, description, people, ProjectStatus.Active);
+        console.log(newProject);
+        this.projects.push(newProject);
+        this.runListeners();
+    }
+    runListeners() {
+        this.listeners.forEach((listenerFn) => listenerFn([...this.projects]));
+    }
+}
+const projectState = ProjectState.instance;
 function Autobind(_target, _methodName, descriptor) {
     const originalMethod = descriptor.value;
     const adjustedDescriptor = {
@@ -43,18 +82,32 @@ function validate(validatableInput) {
 class ProjectList {
     constructor(type) {
         this.type = type;
+        this.assignedProjects = [];
         this.templateElement = document.getElementById('project-list');
         this.hostElement = document.getElementById('app');
         const importedNode = document.importNode(this.templateElement.content, true);
         this.element = importedNode.firstElementChild;
-        this.element.id = `${this.type}-projects`;
+        this.element.id = `${ProjectStatus[this.type].toLowerCase()}-projects`;
+        projectState.addListener((projects) => {
+            this.assignedProjects = projects;
+            this.renderProjects();
+        });
         this.attach();
         this.renderContent();
     }
+    renderProjects() {
+        const listEl = document.getElementById(`${ProjectStatus[this.type].toLowerCase()}-projects-list`);
+        this.assignedProjects.forEach((project) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = project.title;
+            console.log('project :>> ', project);
+            listEl.appendChild(listItem);
+        });
+    }
     renderContent() {
-        const listId = `${this.type}-projects-list`;
+        const listId = `${ProjectStatus[this.type].toLowerCase()}-projects-list`;
         this.element.querySelector('ul').id = listId;
-        this.element.querySelector('h2').textContent = `${this.type.toUpperCase()} PROJECTS`;
+        this.element.querySelector('h2').textContent = `${ProjectStatus[this.type].toUpperCase()} PROJECTS`;
     }
     attach() {
         this.hostElement.insertAdjacentElement('beforeend', this.element);
@@ -78,8 +131,8 @@ class ProjectInput {
         const userInput = this.gatherUserInput();
         if (Array.isArray(userInput)) {
             const [title, description, people] = userInput;
-            console.log('user input', title, description, people);
             this.clearInputs();
+            projectState.addProject(title, description, people);
         }
     }
     clearInputs() {
@@ -112,7 +165,7 @@ class ProjectInput {
         if (!formIsValid) {
             return alert('Invalid input, please try again!');
         }
-        return [enteredTitle, enteredDescription, +enteredPeople];
+        return [enteredTitle, enteredDescription, enteredPeople];
     }
     configure() {
         this.element.addEventListener('submit', this.submitHandler);
@@ -125,6 +178,8 @@ __decorate([
     Autobind
 ], ProjectInput.prototype, "submitHandler", null);
 const prjInput = new ProjectInput();
-const acrivePrjList = new ProjectList('active');
-const finishedPrjList = new ProjectList('finished');
+console.log(prjInput);
+const acrivePrjList = new ProjectList(ProjectStatus.Active);
+const finishedPrjList = new ProjectList(ProjectStatus.Finished);
+console.log(acrivePrjList, finishedPrjList);
 //# sourceMappingURL=app.js.map

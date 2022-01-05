@@ -1,4 +1,64 @@
-// Autobind decorator
+enum ProjectStatus {
+  Active,
+  Finished,
+}
+
+//* Project Type
+class Project {
+  id: string;
+
+  constructor(
+    public title: string,
+    public description: string,
+    public people: number,
+    public status: ProjectStatus
+  ) {
+    this.id = Date.now().toString();
+  }
+}
+
+//* Project state management
+type Listener = (items: Project[]) => void;
+
+class ProjectState {
+  private listeners: Listener[] = [];
+  private projects: Project[] = [];
+  private static _instance: ProjectState;
+
+  private constructor() {}
+
+  public static get instance() {
+    if (!this._instance) {
+      this._instance = new ProjectState();
+    }
+    return this._instance;
+  }
+
+  addListener(listenerFn: Listener) {
+    this.listeners.push(listenerFn);
+  }
+
+  addProject(title: string, description: string, people: number) {
+    const newProject = new Project(
+      title,
+      description,
+      people,
+      ProjectStatus.Active
+    );
+    console.log(newProject);
+    this.projects.push(newProject);
+
+    this.runListeners();
+  }
+
+  private runListeners() {
+    this.listeners.forEach((listenerFn) => listenerFn([...this.projects]));
+  }
+}
+
+const projectState = ProjectState.instance;
+
+//* Autobind decorator
 function Autobind(
   _target: any,
   _methodName: string,
@@ -15,7 +75,7 @@ function Autobind(
   return adjustedDescriptor;
 }
 
-// Validation
+//* Validation
 interface Validatable {
   value: string | number;
   required?: boolean;
@@ -53,13 +113,14 @@ function validate(validatableInput: Validatable): boolean {
   return isValid;
 }
 
-// ProjectList Class
+//* ProjectList Class
 class ProjectList {
   templateElement: HTMLTemplateElement;
   hostElement: HTMLDivElement;
   element: HTMLElement;
+  assignedProjects: Project[] = [];
 
-  constructor(private type: 'active' | 'finished') {
+  constructor(private type: ProjectStatus) {
     this.templateElement = document.getElementById(
       'project-list'
     ) as HTMLTemplateElement;
@@ -73,18 +134,36 @@ class ProjectList {
     );
 
     this.element = importedNode.firstElementChild as HTMLElement;
-    this.element.id = `${this.type}-projects`;
+    this.element.id = `${ProjectStatus[this.type].toLowerCase()}-projects`;
+
+    projectState.addListener((projects: Project[]) => {
+      this.assignedProjects = projects;
+      this.renderProjects();
+    });
 
     this.attach();
     this.renderContent();
   }
 
+  private renderProjects() {
+    const listEl = document.getElementById(
+      `${ProjectStatus[this.type].toLowerCase()}-projects-list`
+    ) as HTMLUListElement;
+
+    this.assignedProjects.forEach((project) => {
+      const listItem = document.createElement('li');
+      listItem.textContent = project.title;
+      console.log('project :>> ', project);
+      listEl.appendChild(listItem);
+    });
+  }
+
   private renderContent() {
-    const listId = `${this.type}-projects-list`;
+    const listId = `${ProjectStatus[this.type].toLowerCase()}-projects-list`;
     this.element.querySelector('ul')!.id = listId;
-    this.element.querySelector(
-      'h2'
-    )!.textContent = `${this.type.toUpperCase()} PROJECTS`;
+    this.element.querySelector('h2')!.textContent = `${ProjectStatus[
+      this.type
+    ].toUpperCase()} PROJECTS`;
   }
 
   private attach() {
@@ -115,7 +194,6 @@ class ProjectInput {
       true
     );
 
-    // get its child
     this.element = importedNode.firstElementChild as HTMLFormElement;
     this.element.id = 'user-input';
 
@@ -140,8 +218,8 @@ class ProjectInput {
     const userInput = this.gatherUserInput();
     if (Array.isArray(userInput)) {
       const [title, description, people] = userInput;
-      console.log('user input', title, description, people);
       this.clearInputs();
+      projectState.addProject(title, description, people);
     }
   }
 
@@ -179,7 +257,7 @@ class ProjectInput {
     if (!formIsValid) {
       return alert('Invalid input, please try again!');
     }
-    return [enteredTitle, enteredDescription, +enteredPeople];
+    return [enteredTitle, enteredDescription, enteredPeople];
   }
 
   private configure() {
@@ -196,5 +274,7 @@ class ProjectInput {
 }
 
 const prjInput = new ProjectInput();
-const acrivePrjList = new ProjectList('active');
-const finishedPrjList = new ProjectList('finished');
+console.log(prjInput);
+const acrivePrjList = new ProjectList(ProjectStatus.Active);
+const finishedPrjList = new ProjectList(ProjectStatus.Finished);
+console.log(acrivePrjList, finishedPrjList);
