@@ -7,8 +7,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 var ProjectStatus;
 (function (ProjectStatus) {
-    ProjectStatus[ProjectStatus["Active"] = 0] = "Active";
-    ProjectStatus[ProjectStatus["Finished"] = 1] = "Finished";
+    ProjectStatus["Active"] = "active";
+    ProjectStatus["Finished"] = "finished";
 })(ProjectStatus || (ProjectStatus = {}));
 class Project {
     constructor(title, description, people, status) {
@@ -87,16 +87,18 @@ class ProjectList {
         this.hostElement = document.getElementById('app');
         const importedNode = document.importNode(this.templateElement.content, true);
         this.element = importedNode.firstElementChild;
-        this.element.id = `${ProjectStatus[this.type].toLowerCase()}-projects`;
+        this.element.id = `${this.type}-projects`;
         projectState.addListener((projects) => {
-            this.assignedProjects = projects;
+            const relevantProjects = projects.filter((project) => project.status === this.type);
+            this.assignedProjects = relevantProjects;
             this.renderProjects();
         });
         this.attach();
         this.renderContent();
     }
     renderProjects() {
-        const listEl = document.getElementById(`${ProjectStatus[this.type].toLowerCase()}-projects-list`);
+        const listEl = document.getElementById(`${this.type}-projects-list`);
+        listEl.innerHTML = '';
         this.assignedProjects.forEach((project) => {
             const listItem = document.createElement('li');
             listItem.textContent = project.title;
@@ -105,9 +107,9 @@ class ProjectList {
         });
     }
     renderContent() {
-        const listId = `${ProjectStatus[this.type].toLowerCase()}-projects-list`;
+        const listId = `${this.type}-projects-list`;
         this.element.querySelector('ul').id = listId;
-        this.element.querySelector('h2').textContent = `${ProjectStatus[this.type].toUpperCase()} PROJECTS`;
+        this.element.querySelector('h2').textContent = `${this.type.toUpperCase()} PROJECTS`;
     }
     attach() {
         this.hostElement.insertAdjacentElement('beforeend', this.element);

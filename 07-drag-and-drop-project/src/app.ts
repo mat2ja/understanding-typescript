@@ -1,6 +1,6 @@
 enum ProjectStatus {
-  Active,
-  Finished,
+  Active = 'active',
+  Finished = 'finished',
 }
 
 //* Project Type
@@ -134,10 +134,13 @@ class ProjectList {
     );
 
     this.element = importedNode.firstElementChild as HTMLElement;
-    this.element.id = `${ProjectStatus[this.type].toLowerCase()}-projects`;
+    this.element.id = `${this.type}-projects`;
 
     projectState.addListener((projects: Project[]) => {
-      this.assignedProjects = projects;
+      const relevantProjects = projects.filter(
+        (project) => project.status === this.type
+      );
+      this.assignedProjects = relevantProjects;
       this.renderProjects();
     });
 
@@ -147,9 +150,10 @@ class ProjectList {
 
   private renderProjects() {
     const listEl = document.getElementById(
-      `${ProjectStatus[this.type].toLowerCase()}-projects-list`
+      `${this.type}-projects-list`
     ) as HTMLUListElement;
 
+    listEl.innerHTML = '';
     this.assignedProjects.forEach((project) => {
       const listItem = document.createElement('li');
       listItem.textContent = project.title;
@@ -159,11 +163,11 @@ class ProjectList {
   }
 
   private renderContent() {
-    const listId = `${ProjectStatus[this.type].toLowerCase()}-projects-list`;
+    const listId = `${this.type}-projects-list`;
     this.element.querySelector('ul')!.id = listId;
-    this.element.querySelector('h2')!.textContent = `${ProjectStatus[
-      this.type
-    ].toUpperCase()} PROJECTS`;
+    this.element.querySelector(
+      'h2'
+    )!.textContent = `${this.type.toUpperCase()} PROJECTS`;
   }
 
   private attach() {
