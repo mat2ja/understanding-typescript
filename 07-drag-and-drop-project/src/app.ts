@@ -56,7 +56,32 @@ class ProjectInput {
   @Autobind
   private submitHandler(e: Event) {
     e.preventDefault();
-    console.log(this.titleInputElement.value);
+
+    const userInput = this.gatherUserInput();
+    if (Array.isArray(userInput)) {
+      const [title, description, people] = userInput;
+      console.log('user input', title, description, people);
+      this.clearInputs();
+    }
+  }
+
+  private clearInputs() {
+    this.element.reset();
+  }
+
+  private gatherUserInput(): [string, string, number] | void {
+    const enteredTitle = this.titleInputElement.value.trim();
+    const enteredDescription = this.descriptionInputElement.value.trim();
+    const enteredPeople = this.peopleInputElement.value.trim();
+
+    if (
+      [enteredTitle, enteredDescription, enteredPeople].some(
+        (v) => v.length === 0
+      )
+    ) {
+      return alert('Invalid input, please try again!');
+    }
+    return [enteredTitle, enteredDescription, +enteredPeople];
   }
 
   private configure() {
@@ -73,4 +98,3 @@ class ProjectInput {
 }
 
 const prjInput = new ProjectInput();
-console.log(prjInput);

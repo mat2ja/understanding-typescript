@@ -31,7 +31,24 @@ class ProjectInput {
     }
     submitHandler(e) {
         e.preventDefault();
-        console.log(this.titleInputElement.value);
+        const userInput = this.gatherUserInput();
+        if (Array.isArray(userInput)) {
+            const [title, description, people] = userInput;
+            console.log('user input', title, description, people);
+            this.clearInputs();
+        }
+    }
+    clearInputs() {
+        this.element.reset();
+    }
+    gatherUserInput() {
+        const enteredTitle = this.titleInputElement.value.trim();
+        const enteredDescription = this.descriptionInputElement.value.trim();
+        const enteredPeople = this.peopleInputElement.value.trim();
+        if ([enteredTitle, enteredDescription, enteredPeople].some((v) => v.length === 0)) {
+            return alert('Invalid input, please try again!');
+        }
+        return [enteredTitle, enteredDescription, +enteredPeople];
     }
     configure() {
         this.element.addEventListener('submit', this.submitHandler);
@@ -44,5 +61,4 @@ __decorate([
     Autobind
 ], ProjectInput.prototype, "submitHandler", null);
 const prjInput = new ProjectInput();
-console.log(prjInput);
 //# sourceMappingURL=app.js.map
