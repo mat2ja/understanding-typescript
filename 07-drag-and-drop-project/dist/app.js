@@ -99,6 +99,23 @@ class Component {
         this.hostElement.insertAdjacentElement(where, this.element);
     }
 }
+class ProjectItem extends Component {
+    constructor(hostId, project) {
+        super('single-project', hostId, 'beforeend', project.id);
+        this.project = project;
+        this.renderContent();
+    }
+    get persons() {
+        const peopleCount = this.project.people;
+        return peopleCount === 1 ? '1 person' : `${peopleCount} people`;
+    }
+    configure() { }
+    renderContent() {
+        this.element.querySelector('h2').textContent = this.project.title;
+        this.element.querySelector('h3').textContent = this.persons;
+        this.element.querySelector('p').textContent = this.project.description;
+    }
+}
 class ProjectList extends Component {
     constructor(type) {
         super('project-list', 'app', 'beforeend', `${type}-projects`);
@@ -122,12 +139,7 @@ class ProjectList extends Component {
     renderProjects() {
         const listEl = document.getElementById(`${this.type}-projects-list`);
         listEl.innerHTML = '';
-        this.assignedProjects.forEach((project) => {
-            const listItem = document.createElement('li');
-            listItem.textContent = project.title;
-            console.log('project :>> ', project);
-            listEl.appendChild(listItem);
-        });
+        this.assignedProjects.forEach((project) => new ProjectItem(listEl.id, project));
     }
 }
 class ProjectInput extends Component {
