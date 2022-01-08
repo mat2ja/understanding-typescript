@@ -246,6 +246,7 @@ class ProjectList
   dropHandler(event: DragEvent) {
     const projectId = event.dataTransfer!.getData('text/plain');
     projectState.moveProject(projectId, this.type);
+    this.listEl.classList.remove('droppable');
   }
 
   @Autobind

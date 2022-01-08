@@ -153,6 +153,7 @@ class ProjectList extends Component {
     dropHandler(event) {
         const projectId = event.dataTransfer.getData('text/plain');
         projectState.moveProject(projectId, this.type);
+        this.listEl.classList.remove('droppable');
     }
     dragLeaveHandler(_) {
         this.listEl.classList.remove('droppable');
