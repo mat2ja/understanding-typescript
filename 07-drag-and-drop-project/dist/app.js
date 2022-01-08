@@ -104,12 +104,20 @@ class ProjectItem extends Component {
         super('single-project', hostId, 'beforeend', project.id);
         this.project = project;
         this.renderContent();
+        this.configure();
     }
     get persons() {
         const peopleCount = this.project.people;
         return peopleCount === 1 ? '1 person' : `${peopleCount} people`;
     }
-    configure() { }
+    dragStartHandler(event) {
+        console.log(event);
+    }
+    dragEndHandler(_) { }
+    configure() {
+        this.element.addEventListener('dragstart', (e) => this.dragStartHandler(e));
+        this.element.addEventListener('dragend', console.log);
+    }
     renderContent() {
         this.element.querySelector('h2').textContent = this.project.title;
         this.element.querySelector('h3').textContent = this.persons;
