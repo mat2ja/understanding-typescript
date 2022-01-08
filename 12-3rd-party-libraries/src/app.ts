@@ -1,7 +1,25 @@
-import _ from 'lodash';
+// import _ from 'lodash';
+// declare var GLOBAL_VAR: any;
+// console.log(_.shuffle([1, 2, 3, 4, 5, 6]));
+// console.log(GLOBAL_VAR);
 
-declare var GLOBAL_VAR: any;
+import 'reflect-metadata';
+import { plainToInstance } from 'class-transformer';
 
-console.log(_.shuffle([1, 2, 3, 4, 5, 6]));
+import { Product } from './product.model';
 
-console.log(GLOBAL_VAR);
+const products = [
+  { title: 'Meditations', price: 9.99 },
+  { title: 'Mastering Ethereum', price: 39.99 },
+];
+
+// const p1 = new Product('Ego is the enemy', 13.99);
+// console.log(p1.getInformation());
+
+// const loadedProducts = products.map((p) => new Product(p.title, p.price));
+
+const loadedProducts = plainToInstance(Product, products);
+
+loadedProducts.forEach((product) => {
+  console.log(product.getInformation());
+});
