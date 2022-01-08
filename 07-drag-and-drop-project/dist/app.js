@@ -40,12 +40,11 @@ class ProjectState extends State {
     }
     addProject(title, description, people) {
         const newProject = new Project(title, description, people, ProjectStatus.Active);
-        console.log(newProject);
         this.projects.push(newProject);
         this.updateListeners();
     }
     moveProject(projectId, newStatus) {
-        const project = this.projects.find(({ id }) => id === projectId);
+        const project = this.findProject(projectId);
         if (project && project.status !== newStatus) {
             project.status = newStatus;
             this.updateListeners();
@@ -53,6 +52,9 @@ class ProjectState extends State {
     }
     updateListeners() {
         this.listeners.forEach((listenerFn) => listenerFn([...this.projects]));
+    }
+    findProject(projectId) {
+        return this.projects.find(({ id }) => id === projectId);
     }
 }
 const projectState = ProjectState.instance;

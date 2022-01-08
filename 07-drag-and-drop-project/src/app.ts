@@ -1,4 +1,4 @@
-// Drag and drop interfaces
+//* Drag and drop interfaces
 interface Draggable {
   dragStartHandler(event: DragEvent): void;
   dragEndHandler(event: DragEvent): void;
@@ -61,14 +61,13 @@ class ProjectState extends State<Project> {
       people,
       ProjectStatus.Active
     );
-    console.log(newProject);
     this.projects.push(newProject);
 
     this.updateListeners();
   }
 
   moveProject(projectId: string, newStatus: ProjectStatus) {
-    const project = this.projects.find(({ id }) => id === projectId);
+    const project = this.findProject(projectId);
     if (project && project.status !== newStatus) {
       project.status = newStatus;
       this.updateListeners();
@@ -77,6 +76,10 @@ class ProjectState extends State<Project> {
 
   private updateListeners() {
     this.listeners.forEach((listenerFn) => listenerFn([...this.projects]));
+  }
+
+  private findProject(projectId: string) {
+    return this.projects.find(({ id }) => id === projectId);
   }
 }
 
