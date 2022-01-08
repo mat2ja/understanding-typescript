@@ -1,4 +1,4 @@
-export function Autobind(_target, _methodName, descriptor) {
+export function autobind(_target, _methodName, descriptor) {
     const originalMethod = descriptor.value;
     const adjustedDescriptor = {
         configurable: true,
