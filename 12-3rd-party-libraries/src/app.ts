@@ -5,6 +5,7 @@
 
 import 'reflect-metadata';
 import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
 
 import { Product } from './product.model';
 
@@ -22,4 +23,13 @@ const loadedProducts = plainToInstance(Product, products);
 
 loadedProducts.forEach((product) => {
   console.log(product.getInformation());
+});
+
+const p2 = new Product('', 13.99);
+validate(p2).then((errors) => {
+  if (errors.length > 0) {
+    console.log(errors);
+  } else {
+    p2.getInformation();
+  }
 });
