@@ -42,9 +42,16 @@ class ProjectState extends State {
         const newProject = new Project(title, description, people, ProjectStatus.Active);
         console.log(newProject);
         this.projects.push(newProject);
-        this.runListeners();
+        this.updateListeners();
     }
-    runListeners() {
+    moveProject(projectId, newStatus) {
+        const project = this.projects.find(({ id }) => id === projectId);
+        if (project && project.status !== newStatus) {
+            project.status = newStatus;
+            this.updateListeners();
+        }
+    }
+    updateListeners() {
         this.listeners.forEach((listenerFn) => listenerFn([...this.projects]));
     }
 }
@@ -103,20 +110,21 @@ class ProjectItem extends Component {
     constructor(hostId, project) {
         super('single-project', hostId, 'beforeend', project.id);
         this.project = project;
-        this.renderContent();
         this.configure();
+        this.renderContent();
     }
     get persons() {
         const peopleCount = this.project.people;
         return peopleCount === 1 ? '1 person' : `${peopleCount} people`;
     }
     dragStartHandler(event) {
-        console.log(event);
+        event.dataTransfer.setData('text/plain', this.project.id);
+        event.dataTransfer.effectAllowed = 'move';
     }
     dragEndHandler(_) { }
     configure() {
-        this.element.addEventListener('dragstart', (e) => this.dragStartHandler(e));
-        this.element.addEventListener('dragend', console.log);
+        this.element.addEventListener('dragstart', this.dragStartHandler);
+        this.element.addEventListener('dragend', this.dragEndHandler);
     }
     renderContent() {
         this.element.querySelector('h2').textContent = this.project.title;
@@ -124,15 +132,35 @@ class ProjectItem extends Component {
         this.element.querySelector('p').textContent = this.project.description;
     }
 }
+__decorate([
+    Autobind
+], ProjectItem.prototype, "dragStartHandler", null);
 class ProjectList extends Component {
     constructor(type) {
         super('project-list', 'app', 'beforeend', `${type}-projects`);
         this.type = type;
         this.assignedProjects = [];
+        this.listEl = this.element.querySelector('ul');
         this.configure();
         this.renderContent();
     }
+    dragOverHandler(event) {
+        if (event.dataTransfer && event.dataTransfer.types[0] === 'text/plain') {
+            event.preventDefault();
+            this.listEl.classList.add('droppable');
+        }
+    }
+    dropHandler(event) {
+        const projectId = event.dataTransfer.getData('text/plain');
+        projectState.moveProject(projectId, this.type);
+    }
+    dragLeaveHandler(_) {
+        this.listEl.classList.remove('droppable');
+    }
     configure() {
+        this.element.addEventListener('dragover', this.dragOverHandler);
+        this.element.addEventListener('dragleave', this.dragLeaveHandler);
+        this.element.addEventListener('drop', this.dropHandler);
         projectState.addListener((projects) => {
             const relevantProjects = projects.filter((project) => project.status === this.type);
             this.assignedProjects = relevantProjects;
@@ -150,6 +178,15 @@ class ProjectList extends Component {
         this.assignedProjects.forEach((project) => new ProjectItem(listEl.id, project));
     }
 }
+__decorate([
+    Autobind
+], ProjectList.prototype, "dragOverHandler", null);
+__decorate([
+    Autobind
+], ProjectList.prototype, "dropHandler", null);
+__decorate([
+    Autobind
+], ProjectList.prototype, "dragLeaveHandler", null);
 class ProjectInput extends Component {
     constructor() {
         super('project-input', 'app', 'afterbegin', 'user-input');
@@ -209,9 +246,7 @@ class ProjectInput extends Component {
 __decorate([
     Autobind
 ], ProjectInput.prototype, "submitHandler", null);
-const prjInput = new ProjectInput();
-console.log(prjInput);
-const acrivePrjList = new ProjectList(ProjectStatus.Active);
-const finishedPrjList = new ProjectList(ProjectStatus.Finished);
-console.log(acrivePrjList, finishedPrjList);
+new ProjectInput();
+new ProjectList(ProjectStatus.Active);
+new ProjectList(ProjectStatus.Finished);
 //# sourceMappingURL=app.js.map
