@@ -4,7 +4,6 @@ namespace App {
     Finished = 'finished',
   }
 
-  //* Project Type
   export class Project {
     id: string;
 
