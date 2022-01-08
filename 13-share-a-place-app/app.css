@@ -4,25 +4,30 @@ html {
 
 body {
   background: #333;
-  max-width: 1000px;
   margin: 0 auto;
   color: white;
+  padding: 0;
 }
 
 #map {
-  height: 20rem;
+  height: 75vh;
   padding: 0 2rem;
-  margin: 2rem auto;
+  margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
 }
 
-form {
-  text-align: center;
+section {
+  max-width: 600px;
   margin: 2rem auto;
   padding: 0 2rem;
+}
+
+form {
+  text-align: center;
+
   display: flex;
   justify-content: center;
   gap: 0.5rem;
@@ -45,4 +50,5 @@ button {
   border: 3px solid #827717;
   background: #e6ee9c;
   color: #827717;
+  cursor: pointer;
 }
