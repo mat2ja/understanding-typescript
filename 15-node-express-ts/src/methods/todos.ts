@@ -16,10 +16,24 @@ const getAllTodos = () => {
 
 const updateTodo = (id: string, text: string) => {
   const todoIdx = TODOS.findIndex((t) => t.id === id);
-  if (todoIdx !== -1) {
-    TODOS[todoIdx] = { ...TODOS[todoIdx], text };
+
+  if (todoIdx === -1) {
+    throw new Error('Todo not found');
   }
+
+  TODOS[todoIdx] = new Todo(TODOS[todoIdx].id, text);
   return TODOS[todoIdx];
 };
 
-export default { addNewTodo, getAllTodos, TODOS, updateTodo };
+const deleteTodo = (id: string) => {
+  const todoIdx = TODOS.findIndex((t) => t.id === id);
+
+  if (todoIdx === -1) {
+    throw new Error('Todo not found');
+  }
+
+  TODOS.splice(todoIdx, 1);
+  return { success: true };
+};
+
+export default { addNewTodo, getAllTodos, updateTodo, deleteTodo };

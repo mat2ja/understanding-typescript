@@ -14,15 +14,31 @@ export const getTodos: RequestHandler = (req, res) => {
   res.status(200).send({ todos });
 };
 
-export const updateTodo: RequestHandler = (req, res) => {
+export const updateTodo: RequestHandler<{ id: string }> = (req, res) => {
   const { text } = req.body as { text: string };
-  const { id } = req.params as { id: string };
+  const { id } = req.params;
 
-  const todo = Methods.updateTodo(id, text);
+  try {
+    const todo = Methods.updateTodo(id, text);
 
-  if (todo) {
-    res.status(200).send({ message: 'Todo was updated', updatedTodo: todo });
-  } else {
-    res.status(404).send({ message: 'Todo not found' });
+    if (todo) {
+      res.status(200).send({ message: 'Todo was updated', updatedTodo: todo });
+    }
+  } catch (err: any) {
+    res.status(404).send({ message: err.message });
+  }
+};
+
+export const deleteTodo: RequestHandler<{ id: string }> = (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const { success } = Methods.deleteTodo(id);
+
+    if (success) {
+      res.status(200).send({ message: 'Todo was deleted' });
+    }
+  } catch (err: any) {
+    res.status(404).send({ message: err.message });
   }
 };
