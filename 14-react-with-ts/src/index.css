@@ -7,3 +7,9 @@ html {
 body {
   margin: 0;
 }
+
+input {
+  background: transparent;
+  border: 1px solid yellow;
+  color: white;
+}
